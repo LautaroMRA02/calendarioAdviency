@@ -3,18 +3,18 @@ import './App.css';
 import { Box,Text,Flex } from '@chakra-ui/react'
 function App() {
   return (
-    <Flex flexDirection="column" >
-        <Box>
-        <Text fontSize='2rem'>Regalos:</Text>
+    <Flex flexDirection="column" bg={'white'}>
+        <Box style={{width:'300px'}}>
+        <Text fontSize='3rem' style={{fontFamily: ['Mountains of Christmas','cursive'],fontWeight:700,textAlign:'center'}}>Regalos:</Text>
           <ul>
             <li>
-              <Text>Medias</Text>
+              <Text fontSize="1.2rem">Medias</Text>
             </li>
             <li>
-            <Text>Caramelos</Text>
+              <Text fontSize="1.2rem">Caramelos</Text>
             </li>
             <li>
-            <Text>Vitel Tone</Text>
+              <Text fontSize="1.2rem">Vitel Tone</Text>
             </li>
           </ul>
         </Box>

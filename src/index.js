@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import { Flex } from '@chakra-ui/react'
+
 ReactDOM.render(
   <React.StrictMode>
     <Flex flexDirection="column" align="center" justify="center" h={'400%'}>
