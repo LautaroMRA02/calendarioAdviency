@@ -4,6 +4,7 @@
     margin: 0;
     box-sizing: border-box;
 }
+
 body{
     height: 97.7vh;
     display: flex;
@@ -11,4 +12,5 @@ body{
     align-items: center;
     background-image: url(./fondo.jpg) !important;
     background-size: cover !important;
+    font-family: sans-serif !important ;
 }
