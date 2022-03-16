@@ -6,11 +6,12 @@
 }
 
 body{
-    height: 97.7vh;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+
     background-image: url(./fondo.jpg) !important;
-    background-size: cover !important;
-    font-family: sans-serif !important ;
+    background-size: cover;
 }
+
