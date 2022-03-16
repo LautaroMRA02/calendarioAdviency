@@ -30,7 +30,7 @@ function App() {
   const ListRegalosComponent = () =>{
     return (
       <List pt={4} pb={4}>
-        {listachilds.length > 0 ?  listachilds:  <Center><Text>no hay regalos</Text></Center>}
+        {listachilds.length > 0 ?  listachilds:  <Center><Text color='gray.600' isTruncated>No hay regalos! Agrega algo!</Text></Center>}
       </List>
     )
   }
