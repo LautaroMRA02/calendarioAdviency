@@ -1,56 +1,81 @@
-import React from 'react';
-import './App.css';
+import {React, useState} from 'react'
+import "./App.css";
+import {
+  Box,
+  Text,
+  List,
+  ListItem,
+  FormControl,
+  Input,
+  Button,
+  Center,
+} from "@chakra-ui/react";
 import { nanoid } from 'nanoid';
-// import { Grid, GridItem } from '@chakra-ui/react'
-import { Box,Text,Flex ,List,ListItem,FormControl,Input,Button,Center} from '@chakra-ui/react'
+
 function App() {
-  const [regaloItem, setRegaloItem] = React.useState('')
-  const [ListRegalo, setListRegalo] = React.useState([])
-  function addRegalo(){
-    let regalos = ListRegalo.map(item=>item.regalo)
-    if(regalos.includes(regaloItem)){
-      
-    } else if( regaloItem === '') {
+  const [regalo, setRegalo] = useState({
+    regalo: "",
+    cand: ""
+  })
+  const [listaRegalo, setListaRegalo] = useState([])
 
-    } else {
-      let item = {id:nanoid(),regalo: regaloItem}
-      setListRegalo(prevData => [...prevData, item] )
-      setRegaloItem('')
+  function addRegalo()
+  {
+    const itemRegalo = {
+      id: nanoid(),
+      regalo: `${regalo.regalo} ${regalo.cand && `x${regalo.cand}`}`,
+      cantidad: regalo.cand,
     }
-  };
-  function removeRegalo(e){
-    let id = e.nativeEvent.path[1].id
-    setListRegalo(prevData =>{
-      let newData = []
-      for(let i = 0; i < prevData.length; i++){
-        if(prevData[i].id !== id){
-          newData.push(prevData[i])
-        }
-      }
-      return newData
+    setListaRegalo(prevData=>[...prevData, itemRegalo])
+    setRegalo({
+      regalo: "",
+      cand: ""
     })
-  };
+  }
+  function deleteRegalo(event)
+  {
+    const newArray = [];
+    const id = event.nativeEvent.path[1].id
+    setListaRegalo(prevData => 
+      {
+        for(let i = 0; i < prevData.length; i++){if(prevData[i].id !== id){newArray.push(prevData[i])}}
+        return newArray
+      })
+  }
+  
+  function handleChange(event) 
+  {
+    setRegalo(prevData => {
+        return {
+            ...prevData,
+            [event.target.name]: event.target.value
+        }
+    })
+    
+  } 
 
-
-  function ListaReglosComponent(){
+  const lista = listaRegalo.map((item)=><ListItem key={item.id} id={item.id} display={'flex'} mb={'4px'}  alignContent={'center'} justifyContent={'space-between'}><Text >{item.regalo}</Text><Button size={'sm'} colorScheme={'red'} onClick={deleteRegalo}>X</Button></ListItem>)
+  function ListRegalosComponent(){
     return(
-      <List>
-        {ListRegalo.length > 0 ? ListRegalo.map((item)=><ListItem key={item.id} id={item.id} display={'flex'} justifyContent={'space-between'} alignItems={'center'}><Text>{item.regalo}</Text><Button size='md' onClick={(e)=>removeRegalo(e)}>X</Button></ListItem>): <Center><Text>No hay regalos! Agregue algunos!</Text></Center>}
+      <List  overflowY={'auto'} >
+        {listaRegalo.length === 0  ? <Center><Text>Agrega un regalo!</Text></Center>:lista}
       </List>
     )
-  }
+  } 
   return (
-    <Flex flexDirection="column" >
-        <Box backgroundColor={'whiteAlpha.800'} p={5} borderRadius={10} display={'flex'} flexDirection={'column'} gap={'8px'}>
-        <Text fontSize='3rem' fontFamily={['Mountains of Christmas']} fontWeight={700}>Regalos:</Text>
-        <FormControl display={'flex'} flexWrap={['wrap','nowrap']} gap={'8px'}>
-          <Input type='text' onChange={(e)=>setRegaloItem(e.target.value)} value={regaloItem} />
-          <Button colorScheme={'blue'} onClick={addRegalo} w={['100%','30%']}>Agregar</Button>
+      <Box bgColor={'whiteAlpha.800'} p={5} borderRadius={10} display={'flex'} flexWrap={'nowrap'} flexDir={'column'} h={['90vh','100%']} maxW={'450px'} gap={'8px'}>
+        <Text fontSize="4rem" fontFamily={'Mountains of Christmas'} fontWeight={700}>Regalos:</Text>
+        <FormControl display={'flex'} gap={'8px'} flexWrap={['wrap',"nowrap"]}>
+          <Box display={'flex'} gap={'8px'} w={['100%','80%']}>
+          <Input placeholder='Regalo...' autoComplete='off' type="text"   w={'80%'} name='regalo' onChange={handleChange} value={regalo.regalo} bgColor={'whitesmoke'}/>
+          <Input placeholder='Cant...' autoComplete='off' type="number" w={'20%'} minW={'70px'} name='cand' id='cand' onChange={handleChange} value={regalo.cand} bgColor={'whitesmoke'}/>
+          </Box>
+          <Button w={['100%','20%']} colorScheme={'blue'} onClick={()=>addRegalo()}>Agregar</Button>
         </FormControl>
-        <ListaReglosComponent/>
-        <Button w={'100%'} onClick={()=>setListRegalo([])} >Vaciar lista</Button>
-        </Box>
-    </Flex>
+        <ListRegalosComponent/>
+        <Button marginTop={['auto']} w={'100%'} colorScheme={'blue'} onClick={()=>setListaRegalo([])}>Vaciar lista</Button>
+      </Box>
+
   );
 }
 
