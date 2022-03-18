@@ -21,12 +21,17 @@ function App() {
 
   function addRegalo()
   {
+
     const itemRegalo = {
       id: nanoid(),
-      regalo: `${regalo.regalo} ${regalo.cand && `x${regalo.cand}`}`,
+      regalo: regalo.regalo ? `${regalo.regalo} ${regalo.cand && `x${regalo.cand}`}`: -1,
       cantidad: regalo.cand,
     }
-    setListaRegalo(prevData=>[...prevData, itemRegalo])
+    // if(itemRegalo.regalo === "")
+    if(itemRegalo.regalo ===  -1){
+    } else{
+      setListaRegalo(prevData=>[...prevData, itemRegalo])
+    }
     setRegalo({
       regalo: "",
       cand: ""
@@ -58,7 +63,7 @@ function App() {
   function ListRegalosComponent(){
     return(
       <List  overflowY={'auto'} >
-        {listaRegalo.length === 0  ? <Center><Text>Agrega un regalo!</Text></Center>:lista}
+        {listaRegalo.length === 0  ? <Center mt={'8px'} mb={'8px'}><Text color={'gray.400'}>No hay regalos!Agregá algo!</Text></Center>:lista}
       </List>
     )
   } 
