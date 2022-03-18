@@ -80,7 +80,12 @@ function App() {
         <ListRegalosComponent/>
         <Button marginTop={['auto']} w={'100%'} colorScheme={'blue'} onClick={()=>setListaRegalo([])}>Vaciar lista</Button>
       </Box>
+
   );
 }
 
 export default App;
+
+
+
+
