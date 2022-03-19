@@ -3,7 +3,7 @@
     box-sizing: border-box !important;
 }
 body{
-    height: 97.7vh;
+    height:100vh;
     display: flex;
     justify-content: center;
     align-items: center;

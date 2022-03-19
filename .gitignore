@@ -4,10 +4,10 @@
 /node_modules
 /.pnp
 .pnp.js
-
+fondo.jpg
 # testing
 /coverage
-
+fondo.jpg
 # production
 /build
 

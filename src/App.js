@@ -85,9 +85,14 @@ function App() {
         </FormControl>
         <ListaRegalosComponent/>
           <Button w={'100%'} colorScheme={'blue'} onClick={()=>setListaRegalos([])}>Borrar Lista</Button>
+
         </Box>
     </Flex>
   );
 }
 
 export default App;
+
+
+
+
