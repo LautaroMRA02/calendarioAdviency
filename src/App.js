@@ -6,6 +6,7 @@ import {FcQuestions} from 'react-icons/fc'
 import { Icon } from '@chakra-ui/react'
 import { CSSTransition } from 'react-transition-group'
 
+
 function App() {
   const [regaloObject, setRegaloObject] = React.useState({
     regalo:   '',
@@ -15,6 +16,7 @@ function App() {
   const [ListaRegalos, setListaRegalos] = React.useState(JSON.parse(localStorage.getItem('LSListaRegalos')) || [])
   const [showButton, setShowButton] = React.useState(true);
   const [showMessage, setShowMessage] = React.useState(false);
+
   React.useEffect(()=>{
     localStorage.setItem('LSListaRegalos',JSON.stringify(ListaRegalos))
   },[ListaRegalos])
@@ -60,7 +62,7 @@ function App() {
       }
     })   
   }
- 
+
   function ListaRegalosComponent(){
     const lista = ListaRegalos.map((item)=>{
       return(
@@ -135,3 +137,7 @@ function App() {
 }
 
 export default App;
+
+
+
+
