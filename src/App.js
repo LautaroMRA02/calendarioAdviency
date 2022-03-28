@@ -57,7 +57,7 @@ function App() {
             {ListaRegalo.map((item)=> (
               <ListItem  id={item.id} display={'flex'} flexDir={'row'} justifyContent={'space-between'} alignItems={'center'}>
                   <Flex>
-                  {item.imagen === '' ? <Icon as={FcQuestions} boxSize={'48px'}/>:<Image boxSize={'48px'} src={item.imagen}/>}
+                  {item.imagen === '' ? <Icon as={FcQuestions} boxSize={'48px'} alt={item.regalo}/>:<Image boxSize={'48px'} src={item.imagen} alt={item.regalo}/>}
                   <Flex marginLeft={'4px'}  flexDir={'column'} flexWrap={'nowrap'} lineHeight={'15px'} justifyContent={'center'}>
                     <Text fontWeight={600}>
                     {item.regalo}  {item.cantidad && `x${item.cantidad}`}
@@ -100,7 +100,7 @@ function App() {
         <CSSTransition in={showButton} timeout={300} unmountOnExit classNames="my-node">
           <Flex 
           zIndex={2} 
-          position={'absolute'}
+          position={'fixed'}
           bgColor={'white'}
           flexDir={'column'}
           width={['90vw','400px']}
@@ -109,7 +109,7 @@ function App() {
           gap={'8px'}
           >
             <Box display={'flex'} flexDir={'column'} gap={'8px'} >
-              <Input id='input1' onKeyDown={(event)=> {if(event.key === "Enter"){document.getElementById('input2').focus()}} } autoComplete='off' type={'text'} name={'regalo'} placeholder="Regalo..." onChange={handleRegalo} value={regaloObject.regalo} />
+              <Input required id='input1' onKeyDown={(event)=> {if(event.key === "Enter"){document.getElementById('input2').focus()}} } autoComplete='off' type={'text'} name={'regalo'} placeholder="Regalo..." onChange={handleRegalo} value={regaloObject.regalo} />
               <Input id='input2' onKeyDown={(event)=> {if(event.key === "Enter"){document.getElementById('input3').focus()}} } autoComplete='off' type={'number'} name={"cantidad"}placeholder="Cant..." onChange={handleRegalo} value={regaloObject.cantidad}/>
               <Input id='input3' onKeyDown={(event)=> {if(event.key === "Enter"){document.getElementById('input4').focus()}} } autoComplete='off' type={'text'} name={"destinario"} placeholder="Destinario..." onChange={handleRegalo} value={regaloObject.destinario}/>
               <Input id='input4' onKeyDown={(event)=> {if(event.key === "Enter"){addRegalo();document.getElementById('input1').focus()}} } autoComplete='off' type={'text'} name={"imagen"} placeholder="https://imagen..." onChange={handleRegalo} value={regaloObject.imagen}/>
