@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&display=swap');
+
 body{
     height: 100vh;
     display: flex;
@@ -34,4 +35,3 @@ body{
 .my-node-enter-done{
     transition: opacity 300ms, transform 300ms;
 }
-
