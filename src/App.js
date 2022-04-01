@@ -105,7 +105,6 @@ function App() {
   };
   return (
     <Flex flexDirection="column" >
-
         <Flex bgColor={'white'} flexDir={'column'} p={5} w={['90vw','500px']} h={['90vh','auto']} gap={'8px'} pointerEvents={showEditComponent || showAddComponent ? 'none':'all'} opacity={showEditComponent || showAddComponent ? 0.5 : 1}>
           <Text fontSize='3rem' fontFamily={'Mountains of Christmas'} fontWeight={700}>Regalos:</Text>
           <Button onClick={()=>setShowAddComponent(true)} colorScheme={'blue'}>Agregar</Button>
@@ -162,3 +161,7 @@ function App() {
 }
 
 export default App;
+
+
+
+
