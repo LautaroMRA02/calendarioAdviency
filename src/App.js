@@ -1,138 +1,127 @@
-import React from 'react';
+import React from 'react'
 import './App.css';
-import { Box,Text,Flex,Input,Button,FormControl,List,ListItem,Center,Image  } from '@chakra-ui/react'
+import { Box,Text,Flex,Input,Button,List,ListItem,Center,Image  } from '@chakra-ui/react'
 import {nanoid} from 'nanoid'
-import {FcQuestions} from 'react-icons/fc'
+import { CSSTransition} from 'react-transition-group';
+import {FcQuestions, } from 'react-icons/fc'
 import { Icon } from '@chakra-ui/react'
-import { CSSTransition } from 'react-transition-group'
-
 
 function App() {
   const [regaloObject, setRegaloObject] = React.useState({
-    regalo:   '',
-    cantidad: '',
-    imagen:   '',
+    regalo: "",
+    cantidad:"",
+    imagen:"",
+    destinario: "",
   })
-  const [ListaRegalos, setListaRegalos] = React.useState(JSON.parse(localStorage.getItem('LSListaRegalos')) || [])
-  const [showButton, setShowButton] = React.useState(true);
-  const [showMessage, setShowMessage] = React.useState(false);
-
-  React.useEffect(()=>{
-    localStorage.setItem('LSListaRegalos',JSON.stringify(ListaRegalos))
-  },[ListaRegalos])
-
+  const [ListaRegalo, setListaRegalo] = React.useState( JSON.parse(localStorage.getItem("LSsetListaRegalo")) || [])
+  const [showButton, setShowButton] = React.useState(false)
   function addRegalo(){
     const item = {
-      id: nanoid(),
-      regalo:   regaloObject.regalo,
-      cantidad: regaloObject.cantidad,
-      imagen:   regaloObject.imagen,
+      ...regaloObject,
+      id: nanoid()
     }
-    if(item.regalo === ''){
-    }
-     else {
-      setListaRegalos(prevData =>[...prevData, item])
-    }
-    setRegaloObject({
-      regalo:   '',
-      cantidad: '',
-      imagen:   '',
+  setListaRegalo(prevData=>[...prevData, item])
+  setRegaloObject({
+    regalo: "",
+    cantidad:"",
+    imagen:"",
+    destinario: "",
+  })
+  }
+  function removeRegalo(event){
+    let id = event.nativeEvent.path[1].id
+    setListaRegalo(prevData=>{
+      let newData = [];
+      for(let i = 0; i < prevData.length; i++){if(id !== prevData[i].id){newData.push(prevData[i])}}
+      return newData
     })
-  };
-  function removeRegalo(e){
-    let newArray= [];
-    let id = e.nativeEvent.path[1].id;
-    console.log(id)
-    setListaRegalos(prevData => {
-    for(let i = 0; i < prevData.length ; i++){
-      if(prevData[i].id !== id)
-      {newArray.push(prevData[i])}
-    }
-    return newArray
-    })
-  };
-
-  function handleRegaloObject(e){
-    console.log('ccc')
-    console.log(regaloObject)
-    setRegaloObject(prevData =>{
-      return {
-        ...prevData,
-        [e.target.name]: e.target.value
-      }
-    })   
   }
 
-  function ListaRegalosComponent(){
-    const lista = ListaRegalos.map((item)=>{
-      return(
-        <ListItem key={item.id} id={item.id} display={'flex'} flexWrap={'nowrap'} justifyContent={'space-between'} alignItems={'center'} >
-            <Box display={'flex'} flexWrap={'nowrap'} gap={'8px'} alignItems={'center'}>
-              {item.imagen === '' ? <Icon as={FcQuestions} boxSize={'48px'} /> : <Image src={item.imagen} boxSize={'48px'} objectFit='cover' alt={item.regalo}/>}
-              <Text>{item.regalo} {item.cantidad && `x${item.cantidad}`}</Text>
-            </Box>
-            <Button size={'sm'} colorScheme={'red'} onClick={removeRegalo}>X</Button>
-        </ListItem>
-      )
+  function handleRegalo(event){
+    setRegaloObject(prevData => {
+      return {
+        ...prevData,
+        [event.target.name]:event.target.value
+      }
     })
-    return (
-      <List spacing={'8px'}>
-          {lista.length === 0 ? <Center><Text color={'gray.400'}> No hay regalos! Agrega algo!</Text></Center>: lista}
-      </List>
-    )
-  };
+  }
+
+  React.useEffect(()=>{
+    localStorage.setItem('LSsetListaRegalo', JSON.stringify(ListaRegalo))
+  },[ListaRegalo])
+
+  function ListaRegaloComponent(props){
+    if(props.statusRegalos){
+      return (
+          <List spacing={'8px'} overflowY={'auto'}>
+            {ListaRegalo.map((item)=> (
+              <ListItem  id={item.id} display={'flex'} flexDir={'row'} justifyContent={'space-between'} alignItems={'center'}>
+                  <Flex>
+                  {item.imagen === '' ? <Icon as={FcQuestions} boxSize={'48px'} alt={item.regalo}/>:<Image boxSize={'48px'} src={item.imagen} alt={item.regalo}/>}
+                  <Flex marginLeft={'4px'}  flexDir={'column'} flexWrap={'nowrap'} lineHeight={'15px'} justifyContent={'center'}>
+                    <Text fontWeight={600}>
+                    {item.regalo}  {item.cantidad && `x${item.cantidad}`}
+                    </Text>
+                    <Text color={'gray.500'} marginLeft={'4px'}>
+                    {item.destinario}
+                    </Text>
+                  </Flex>
+                  </Flex>
+                  <Button className='remove-btn' onClick={removeRegalo} colorScheme={'red'} size={'sm'}>&times;</Button>
+                </ListItem>
+              )
+            )}
+          </List>
+
+      )
+    } else {
+      return (<Center><Text color={'gray.500'}>No hay regalos! Agregé algo!</Text></Center>)
+    }
+  }
   return (
-        <Box>
 
-        <Box h={['90vh','auto']} transition={'all 1s '} bgColor={!showMessage?'white':'gray.400'} w={['99vw','60vw','500px']} p={5} display={'flex'} flexDir={'column'} gap={'8px'} flexWrap={'nowrap'} borderRadius={10}>
-        <Text pointerEvents={!showMessage?'none':'all'} fontSize='3rem' fontFamily={'Mountains of Christmas'} fontWeight={700}>Regalos:</Text>
-        <Button
-          onClick={() => setShowMessage(true)}
-          w='100%'
-          pointerEvents={showMessage?'none':'all'}
-          colorScheme={showMessage?'facebook':'blue'}
-        >Agregar</Button>
-        <ListaRegalosComponent/>
-          <Button pointerEvents={showMessage?'none':'all'} marginTop={'auto'} w={'100%'} colorScheme={showMessage?'facebook':'blue'} onClick={()=>setListaRegalos([])}>Borrar Lista</Button>
-
-
-
-        </Box>
-        <CSSTransition
-          in={showMessage}
-          timeout={300}
-          classNames="alert"
-          unmountOnExit
-          onEnter={() => setShowButton(false)}
-          onExited={() => setShowButton(true)}
+    <Flex flexDirection="column" >
+        <Flex 
+        flexDir='column' 
+        zIndex={1}  
+        id='menu'
+        bgColor={'whiteAlpha.800'}
+        p={5}
+        width={['90vw','400px']}
+        gap={'8px'}
+        height={['90vh','auto']}
         >
-          <Flex
-            position={'absolute'}
-            w={['99vw','60vw','500px']}
-            p={5}
-            dismissible='true'
-            onClose={() => setShowMessage(false)}
-            bgColor={'white'}
-            top={'25vh'}
-            borderRadius={10}
-          >
-        <FormControl display={'flex'} flexWrap={'wrap'}  flexDir={'column'} gap={'16px'}>
-          <Box display={'flex'} flexWrap={'nowrap'} gap={'8px'} flexDir={'column'}>
-            <Input autoComplete='off' placeholder='Regalo...' w={'100%'} type={'text'} name={'regalo'} id={'regalo'} onChange={handleRegaloObject} value={regaloObject.regalo}/>
-              <Input autoComplete='off' placeholder='https://imagen...' w={'100%'} type={'text'} name={'imagen'} id={'imagen'} onChange={handleRegaloObject} value={regaloObject.imagen}/>
-              <Input autoComplete='off' placeholder='Cant.' w={'100%'} type={'number'} name={'cantidad'} id={'cantidad'} onChange={handleRegaloObject} value={regaloObject.cantidad}/>
-          </Box>
-          <Flex flexDir={'row'} justifyContent={'space-between'}>
-          <Button onClick={() => setShowMessage(false)}>
-            Cerrar
-          </Button>
-          <Button w={["auto"]} colorScheme={'blue'} onClick={addRegalo}>Agregar</Button>
-          </Flex>
-        </FormControl>
+          <Text fontSize='3rem' fontFamily={'Mountains of Christmas'} fontWeight={700}>Regalos:</Text>
+          <Button colorScheme={'blue'} onClick={()=>setShowButton(true)}>Agregar</Button>
+          <ListaRegaloComponent   statusRegalos={ListaRegalo.length >= 1} />
+          <Button s marginTop={'auto'} colorScheme={'blue'} onClick={()=>setListaRegalo([])}>Borrar Lista</Button>
         </Flex>
-        </CSSTransition>
-        </Box>
 
+        <CSSTransition in={showButton} timeout={300} unmountOnExit classNames="my-node">
+          <Flex 
+          zIndex={2} 
+          position={'fixed'}
+          bgColor={'white'}
+          flexDir={'column'}
+          width={['90vw','400px']}
+          p={5}
+          marginBottom={'8px'}
+          gap={'8px'}
+          >
+            <Box display={'flex'} flexDir={'column'} gap={'8px'} >
+              <Input required id='input1' onKeyDown={(event)=> {if(event.key === "Enter"){document.getElementById('input2').focus()}} } autoComplete='off' type={'text'} name={'regalo'} placeholder="Regalo..." onChange={handleRegalo} value={regaloObject.regalo} />
+              <Input id='input2' onKeyDown={(event)=> {if(event.key === "Enter"){document.getElementById('input3').focus()}} } autoComplete='off' type={'number'} name={"cantidad"}placeholder="Cant..." onChange={handleRegalo} value={regaloObject.cantidad}/>
+              <Input id='input3' onKeyDown={(event)=> {if(event.key === "Enter"){document.getElementById('input4').focus()}} } autoComplete='off' type={'text'} name={"destinario"} placeholder="Destinario..." onChange={handleRegalo} value={regaloObject.destinario}/>
+              <Input id='input4' onKeyDown={(event)=> {if(event.key === "Enter"){addRegalo();document.getElementById('input1').focus()}} } autoComplete='off' type={'text'} name={"imagen"} placeholder="https://imagen..." onChange={handleRegalo} value={regaloObject.imagen}/>
+            </Box>
+            <Flex justifyContent={'space-between'}>
+              <Button colorScheme={'red'} onClick={()=>setShowButton(false)}>Cancelar</Button>
+              <Button colorScheme={'blue'} onClick={addRegalo}>Agregar</Button>
+            </Flex>
+
+          </Flex>
+        </CSSTransition>
+    </Flex>
   );
 }
 
