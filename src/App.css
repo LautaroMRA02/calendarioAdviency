@@ -1,6 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&display=swap');
 body{
-    height: 97.7vh;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-image: url(./fondo.webp) !important;
+    background-size: cover !important;
+}
+.modal{
+  position: absolute;
+}
+.my-node-enter {
+  opacity: 0;
+}
+.my-node-enter-active {
+  opacity: 1;
+  transition: opacity 200ms;
+}
+.my-node-exit {
+  opacity: 1;
+}
+.my-node-exit-active {
+  opacity: 0;
+  transition: opacity 200ms;
 }
