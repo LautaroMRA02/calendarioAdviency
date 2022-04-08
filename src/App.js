@@ -1,167 +1,160 @@
-import {React , useState, useEffect} from 'react'
+import { useState, useEffect} from 'react';
 import './App.css';
-import {nanoid} from 'nanoid'
-import { CSSTransition} from 'react-transition-group';
-import {FcQuestions, } from 'react-icons/fc'
-import { Image,Text,Flex,Button,Icon,List,ListItem, Center, Input } from '@chakra-ui/react'
-function App() {
-  const [RegaloObject, setRegaloObject] = useState({
-    regalo: '',
-    cantidad: '',
-    destinario: '',
-    imagen: '',
-  })
-  const [EditObject, setEditObject] = useState(null)
-  const [ListaRegalos, setListaRegalos] = useState( JSON.parse(localStorage.getItem("LSListaRegalos")) || [])
-  
-  const [showAddComponent, setShowAddComponent] = useState(false)
-  const [showEditComponent, setShowEditComponent] = useState(false)
+import { Text,Flex, Button, List, ListItem, Center, Input, useDisclosure,Icon ,Image } from '@chakra-ui/react'
+import {FcQuestions} from 'react-icons/fc'
+import { nanoid } from 'nanoid';
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+} from '@chakra-ui/react'
 
-  useEffect(() => {
-    localStorage.setItem("LSListaRegalos",JSON.stringify(ListaRegalos))
-  }, [ListaRegalos])
-  
-  function addRegalo(event)
-  {
-    let item = 
-    {
-      ...RegaloObject,
+function App() {
+  const [showAgregar, setShowAgregar] = useState(false);
+  const [regaloObject, setRegaloObject] = useState({
+    regalo:'',
+    destinario:'',
+    cantidad:'',
+    imagen:'',
+  });
+  const [regaloObjectEDIT, setRegaloObjectEDIT] = useState(null);
+  const { isOpen: isEditOpen , onOpen: onEditOpen, onClose: onEditClose } = useDisclosure()
+  const { isOpen: isAddOpen , onOpen: onAddOpen, onClose: onAddClose } = useDisclosure()
+  const [listaRegalos, setListaRegalos] =  useState(()=>JSON.parse(localStorage.getItem('LSlistaRegalos'))||[]);
+  useEffect(()=>{
+    localStorage.setItem('LSlistaRegalos',JSON.stringify(listaRegalos))
+  },[listaRegalos])
+  function editRegalo(event){
+    setRegaloObjectEDIT(()=>{
+    const item = listaRegalos.filter(item => item.id === event.target.name)
+    return item[0]})
+    onEditOpen();
+  }
+  function addRegalo(){
+    const item = {
+      ...regaloObject,
       id: nanoid()
     }
     if(item.regalo === ''){
-    }else{
-      setListaRegalos(prevData=> {return[...prevData,item]})
+    } else {
+      setListaRegalos(prevData=>[...prevData,item])
     }
     setRegaloObject({
-      regalo: '',
-      cantidad: '',
-      destinario: '',
-      imagen: '',
+      regalo:'',
+      destinario:'',
+      cantidad:'',
+      imagen:'',
     })
   };
-
-  function removeRegalo(event)
-  {
-    const id = event.nativeEvent.path[2].id
-    console.log(id)
+  function addRegaloEDIT(){
     setListaRegalos(prevData=>{
-      const newLista = prevData.filter(item => item.id !== id)
-      return newLista
+      const newArray = prevData.map((item)=>{
+        if(item.id === regaloObjectEDIT.id){
+          return regaloObjectEDIT
+        } else {
+          return item
+        }
+      })
+      return newArray
     })
-    }
-
-  function editedRegalo(event)
-  {
-    setShowAddComponent(false)
+  };
+  function removeRegalo(event){
     const id = event.nativeEvent.path[2].id
-    setEditObject(prevData =>{
-      const item = ListaRegalos.filter(item => item.id === id)
-      return item[0]
+    setListaRegalos(prevData=> prevData.filter(item => item.id !== id))
+  };
+
+  function handleRegaloObject(event){
+    setRegaloObject(prevData => {
+      return {...prevData,[event.target.name]:event.target.value}
     })
-    setShowEditComponent(true)
   }
-  function addEdit(){
-    setListaRegalos(prevData => {
-    const newArray = ListaRegalos.map(item => {
-      if(item.id === EditObject.id){
-        return EditObject
-      } else {
-        return item
-      }
+  function handleRegaloObjectEDIT(event){
+    setRegaloObjectEDIT(prevData => {
+      return {...prevData,[event.target.name]:event.target.value}
     })
-    return newArray
-      
-    });
-  }
-  function handleRegaloObject(event)
-  {
-    setRegaloObject(prevData=>{return{...prevData,[event.target.name]:event.target.value}})
-  }
-  function handleEditObject(event)
-  {
-    setEditObject(prevData=>{return{...prevData,[event.target.name]:event.target.value}})
   }
   function ListaRegalosComponent(){
-    const lista = ListaRegalos.map((item)=>(
-      <ListItem key={item.id} id={item.id} display={'flex'} flexDir={'row'} justifyContent={'space-between'} alignItems={'center'}>
-        <Flex gap={'8px'}>
-        {item.imagen === '' ? <Icon as={FcQuestions} boxSize={'48px'} /> : <Image src={item.imagen} fallbackSrc='https://via.placeholder.com/150' boxSize={'48px'} objectFit='cover' alt={item.regalo}/>}
-        <Flex flexDir={'column'}  justifyContent={'flex-start'}>
-          <Text>{item.regalo} {item.cantidad !== '' && `x${item.cantidad}`  }</Text>
-          <Text marginLeft={'4px'} color={'GrayText'}>{item.destinario}</Text>
-        </Flex>
-        </Flex>
-        <Flex flexDir={'row'} gap={'8px'}>
-          <Button onClick={editedRegalo} size={'sm'}>E</Button>
-          <Button onClick={removeRegalo} size={'sm'}>X</Button>
-        </Flex>
-      </ListItem>
-    ))
-    return(
+    const Lista = listaRegalos.map( item =>{
+      return(
+          <ListItem key={item.id} id={item.id} display={'flex'} flexDir={'row'} justifyContent={'space-between'}>
+              <Flex gap={'8px'} flexDir={'row'}>
+              {item.imagen ? <Icon boxSize={'48px'} as={FcQuestions}/>:<Image src={item.imagen} />}
+                <Flex flexDir={'column'} justifyContent={'center'} lineHeight={'20px'}>
+                  <Text fontSize={'1.4rem'}>
+                    {item.regalo} {item.cantidad > 1 && `x${item.cantidad}` }
+                  </Text>
+                  <Text color={'GrayText'}>
+                    {item.destinario}
+                  </Text>
+                  
+                </Flex>
+              </Flex>
+              <Flex gap={'8px'}>
+                <Button name={item.id} onClick={editRegalo}>E</Button>
+                <Button onClick={removeRegalo}>X</Button>
+              </Flex>
+          </ListItem>
+        )})
+    return (
       <List spacing={'4px'}>
-       {lista.length === 0 ? <Center><Text color={'GrayText'}>No hay regalos! Agrege Algo!</Text></Center>:lista}
+        {Lista.length === 0 ?  <Center><Text color={'GrayText'}>No hay regalos! Agrega algo!</Text></Center> : Lista }
       </List>
     )
-  };
-  return (
-    <Flex flexDirection="column" >
-        <Flex bgColor={'white'} flexDir={'column'} p={5} w={['90vw','500px']} h={['90vh','auto']} gap={'8px'} pointerEvents={showEditComponent || showAddComponent ? 'none':'all'} opacity={showEditComponent || showAddComponent ? 0.5 : 1}>
-          <Text fontSize='3rem' fontFamily={'Mountains of Christmas'} fontWeight={700}>Regalos:</Text>
-          <Button onClick={()=>setShowAddComponent(true)} colorScheme={'blue'}>Agregar</Button>
-          <ListaRegalosComponent/>
-          <Button marginTop={'auto'} onClick={()=>setListaRegalos([])} colorScheme={'blue'}>Borrar Lista</Button>
-        </Flex>
+    }    
 
-        {/* {MODALS MODALS MODALS MODALS MODALS MODALS} */}
-        {/* {MODALS MODALS MODALS MODALS MODALS MODALS} */}
-        {/* {MODALS MODALS MODALS MODALS MODALS MODALS} */}
-        <CSSTransition
-          in={showAddComponent}
-          classNames="my-node"
-          unmountOnExit
-           timeout={300}
-        >
-          <Flex bgColor={'white'} flexDir={'column'} p={5}  gap={'8px'} className={'ccc'} w={['90vw','300px']}>
-            <Flex flexDir={'column'} gap={'4px'} >
-              <Input autoComplete='off' value={RegaloObject.regalo} onChange={handleRegaloObject} type={'text'} id='regalo' name='regalo' placeholder='Regalo...'/>
-              <Input autoComplete='off' value={RegaloObject.destinario} onChange={handleRegaloObject} type={'text'} id='destinario' name='destinario' placeholder='Destinario...'/>
-              <Input autoComplete='off' value={RegaloObject.cantidad} onChange={handleRegaloObject} type={'number'} id='cantidad' name='cantidad' placeholder='Cant...'/>
-              <Input autoComplete='off' value={RegaloObject.imagen} onChange={handleRegaloObject} type={'text'} id='imagen' name='imagen' placeholder='https://imagen...'/>
-            </Flex>
-            <Flex flexDir={'row'} justifyContent={'space-between'}>
-            <Button onClick={()=>setShowAddComponent(false)}>X</Button>
-            <Button onClick={addRegalo} colorScheme={'blue'}>Agregar</Button>
-            </Flex>
-          </Flex>
-        </CSSTransition>
-        <CSSTransition
-          in={showEditComponent}
-          classNames="my-node"
-          unmountOnExit
-          timeout={300}
-        >
-          <Flex flexDir={'column'} bgColor={'white'} p={5}  gap={'8px'}  className={'ccc'} w={['90vw','300px']}>
-            <Flex flexDir={'column'} gap={'4px'}>
-              <Input autoComplete='off' value={EditObject?.regalo} onChange={handleEditObject}      type={'text'} id='regalo' name='regalo' placeholder='Regalo...'/>
-              <Input autoComplete='off' value={EditObject?.destinario} onChange={handleEditObject}  type={'text'} id='destinario' name='destinario' placeholder='Destinario...'/>
-              <Input autoComplete='off' value={EditObject?.cantidad} onChange={handleEditObject}  type={'number'} id='cantidad' name='cantidad' placeholder='Cant...'/>
-              <Input autoComplete='off' value={EditObject?.imagen} onChange={handleEditObject}  type={'text'} id='imagen' name='imagen' placeholder='https://imagen...'/>
-            </Flex>
-            <Flex flexDir={'row'} justifyContent={'space-between'}>
-            <Button onClick={()=>setShowEditComponent(false)}>X</Button>
-            <Button onClick={addEdit} colorScheme={'whatsapp'}>Guardar</Button>
-            </Flex>
-          </Flex>
-        </CSSTransition>
-        {/* {MODALS MODALS MODALS MODALS MODALS MODALS} */}
-        {/* {MODALS MODALS MODALS MODALS MODALS MODALS} */}
-        {/* {MODALS MODALS MODALS MODALS MODALS MODALS} */}
+  return (
+    <Flex flexDirection="column"   alignItems={'center'}>
+        <Flex bgColor={'white'} w={['90vw','450px']}  h={['99vh','auto']}flexDir={'column'} gap={'12px'} p={5} pointerEvents={!showAgregar ? 'all': 'none'}>
+          <Text fontSize='3rem' fontFamily={'Mountains of Christmas'} fontWeight={700}>Regalos:</Text>
+          <Button onClick={onAddOpen} colorScheme='blue'>Agregar</Button>
+          <ListaRegalosComponent/>
+          <Button onClick={()=>setListaRegalos([])} marginTop={'auto'}>Borrar Lista</Button>
+        </Flex>
+      <Modal  isOpen={isAddOpen} onClose={onAddClose} >
+        <ModalOverlay  />
+        <ModalContent  w={['90vw','250px']}>
+          <ModalHeader>Agregar Regalo🎁</ModalHeader>
+          <ModalBody>
+            <Flex flexDir={'column'} gap={'8px'}>
+                <Input  placeholder='Regalo...'  autoComplete='off' type={'text'} name={'regalo'}  onChange={handleRegaloObject}/>
+                <Input  placeholder='Destinario...'  autoComplete='off' type={'text'} name={'destinario'}  onChange={handleRegaloObject}/>
+                <Input  placeholder='Cantidad...'  autoComplete='off' type={'number'} name={'cantidad'}  onChange={handleRegaloObject}/>
+                <Input  placeholder='http://imagen/...'  autoComplete='off' type={'url'} name={'imagen'}  onChange={handleRegaloObject}/>
+              </Flex>
+          </ModalBody>
+
+          <ModalFooter display={'flex'} justifyContent={'space-between'}>
+            <Button  mr={3} onClick={onAddClose}>
+              Close
+            </Button>
+            <Button colorScheme='blue' onClick={addRegalo}>Agregar</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal  isOpen={isEditOpen} onClose={onEditClose} >
+        <ModalOverlay/>
+        <ModalContent  w={['90vw','250px']}>
+          <ModalHeader>Editar Regalo🎁</ModalHeader>
+          <ModalBody>
+            <Flex flexDir={'column'} gap={'8px'}>
+                <Input placeholder='Regalo...' value={regaloObjectEDIT?.regalo} onChange={handleRegaloObjectEDIT} autoComplete='off' type={'text'} name={'regalo'} />
+                <Input placeholder='Destinario...' value={regaloObjectEDIT?.destinario} onChange={handleRegaloObjectEDIT} autoComplete='off' type={'text'} name={'destinario'} />
+                <Input placeholder='Cantidad...' value={regaloObjectEDIT?.cantidad} onChange={handleRegaloObjectEDIT} autoComplete='off' type={'number'} name={'cantidad'} />
+                <Input placeholder='http://imagen/...' value={regaloObjectEDIT?.imagen} onChange={handleRegaloObjectEDIT} autoComplete='off' type={'url'} name={'imagen'} />
+              </Flex>
+          </ModalBody>
+          <ModalFooter display={'flex'} justifyContent={'space-between'} >
+            <Button  mr={3} onClick={onEditClose}>
+              Close
+            </Button>
+            <Button colorScheme='whatsapp' onClick={addRegaloEDIT}>Guardar</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Flex>
   );
 }
-
 export default App;
-
-
-
-
