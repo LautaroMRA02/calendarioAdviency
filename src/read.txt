@@ -1,0 +1,1 @@
+agregar "fondo.jpg" en "src"
