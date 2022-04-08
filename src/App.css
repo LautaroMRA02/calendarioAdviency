@@ -7,20 +7,3 @@ body{
     background-image: url(./fondo.webp) !important;
     background-size: cover !important;
 }
-.modal{
-  position: absolute;
-}
-.my-node-enter {
-  opacity: 0;
-}
-.my-node-enter-active {
-  opacity: 1;
-  transition: opacity 200ms;
-}
-.my-node-exit {
-  opacity: 1;
-}
-.my-node-exit-active {
-  opacity: 0;
-  transition: opacity 200ms;
-}
