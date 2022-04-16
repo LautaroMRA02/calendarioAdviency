@@ -1,74 +1,144 @@
-import React, { useState } from 'react'
+import React from "react";
 import {
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalBody,
-    ModalCloseButton,
-    Button,
-    FormControl,
-    FormLabel,
-    Input,
-    Flex,
-  } from '@chakra-ui/react'
-import { nanoid } from 'nanoid'
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalCloseButton,
+  Button,
+  Text,
+  ModalHeader,
+  ModalBody,
+  Input,
+  FormLabel,
+  Flex,
+} from "@chakra-ui/react";
+import { nanoid } from "nanoid";
 
-function AddModal({setListaRegalos,  isOpenAdd, onOpenAdd, onCloseAdd }) {
-    const [regaloObject, setRegaloObject] = useState({
-        regalo:'', 
-        destinario:'',
-        cantidad: 1,
-        imagen:''
-      })
-    function handleRegaloObject(e){
-        setRegaloObject(prevData=>{
-            return{...prevData,[e.target.name]:e.target.value}}
-            )
-    }
-    function addRegalo(e){
-        const item ={ ...regaloObject, id:nanoid() }    
-        setListaRegalos(prevData=> [...prevData,item])
-        setRegaloObject({
-            regalo:'', 
-            destinario:'',
-            cantidad: 1,
-            imagen:''
-          })
-    };
+const AddModal = ({
+  regaloState,
+  setRegaloState,
+  ListaRegalos,
+  setListaRegalos,
+  isOpenAdd,
+  onCloseAdd,
+}) => {
+  function handleRegalo(e) {
+    setRegaloState((prevData) => {
+      return { ...prevData, [e.target.name]: e.target.value };
+    });
+  }
+  function addRegalo() {
+    setListaRegalos((prevData) => {
+      const item = { ...regaloState, id: nanoid() };
+      return [...prevData, item];
+    });
+    setRegaloState({
+      regalo: "",
+      destinario: "",
+      cantidad: "",
+      imagen: "",
+    });
+  }
+
+  const regalosAleatorios = [
+    "Kit de uñas",
+    "Gorrito",
+    "Guantes",
+    "Leggings",
+    "Calentadores",
+    "Bufanda",
+    "Perfume",
+    "Maletín con juego de llaves",
+    "Atornillador",
+    "Sacacorchos",
+    "Tirador de cerveza",
+    "Juego cubos de hielo",
+    "Recortador de barba",
+    "Kit cuidado para barba",
+  ];
+  function regaloRandom(){
+    const num  = Math.floor(Math.random() * (14 - 1)) + 1;
+    document.getElementById('regalo').value = regalosAleatorios[num]
+    setRegaloState((prevData) => {
+      return { ...prevData, regalo: regalosAleatorios[num] };
+    });
+  }
+
+
   return (
-      <React.Fragment>
-        <Modal isOpen={isOpenAdd} onClose={onCloseAdd} >
-        <ModalOverlay />
-        <ModalContent w={['98vw','400px']}>
-        <ModalHeader>Agregar Regalo</ModalHeader>
-        <ModalCloseButton />
+    <Modal isOpen={isOpenAdd} onClose={onCloseAdd}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>
+          <Text>Agregar Regalo</Text>
+          <ModalCloseButton />
+        </ModalHeader>
         <ModalBody>
-            <FormControl id='formadd'>
-                <FormLabel htmlFor='regalo'>Regalos</FormLabel>
-                <Input autoComplete='off' isRequired type='text' id='regalo' name='regalo' onChange={handleRegaloObject}/>
-                <FormLabel htmlFor='regalo'>Destinario</FormLabel>
-                <Input autoComplete='off' isRequired type='text' id='destinario' name='destinario' onChange={handleRegaloObject}/>
-                <FormLabel htmlFor='regalo'>Cantidad</FormLabel>
-                <Input autoComplete='off' defaultValue={'1'} isRequired type='number' id='cantidad' name='cantidad' onChange={handleRegaloObject}/>
-                <FormLabel htmlFor='regalo'>Imagen</FormLabel>
-                <Input autoComplete='off' isRequired type='text' id='regalo' name='regalo' onChange={handleRegaloObject}/>
-                <Flex marginTop={'16px'}  justifyContent={'space-between'}  > 
-                    <Button mr={3} onClick={onCloseAdd}>
-                        Cancelar
-                    </Button>
-                    <Button type='submit' colorScheme='blue' onClick={addRegalo}>
-                        agregar
-                    </Button>
+          <form>
+            <FormLabel htmlFor="" as="legend">
+              Regalo
+            </FormLabel>
+            <Flex flexDir={"row"} gap={"8px"}>
+              <Input
+                onChange={handleRegalo}
+                variant={"filled"}
+                autoComplete="off"
+                type={"text"}
+                name="regalo"
+                alt="regalo"
+                id="regalo"
+              />
+              <Button onClick={regaloRandom}>Aleatorio</Button>
             </Flex>
-            </FormControl>
+            <FormLabel htmlFor="destinario" as="legend">
+              Destinario
+            </FormLabel>
+            <Input
+              onChange={handleRegalo}
+              variant={"filled"}
+              autoComplete="off"
+              type={"text"}
+              name="destinario"
+              alt="destinario"
+              id="destinario"
+            />
+            <FormLabel htmlFor="cantidad" as="legend">
+              Cantidad
+            </FormLabel>
+            <Input
+              onChange={handleRegalo}
+              variant={"filled"}
+              autoComplete="off"
+              type={"number"}
+              name="cantidad"
+              alt="cantidad"
+              id="cantidad"
+            />
+            <FormLabel htmlFor="imagen" as="legend">
+              Imagen(url)
+            </FormLabel>
+            <Input
+              onChange={handleRegalo}
+              variant={"filled"}
+              autoComplete="off"
+              type={"text"}
+              name="imagen"
+              alt="imagen"
+              id="imagen"
+            />
+            <Flex mt={"16px"}>
+              <Button mr={"auto"} onClick={onCloseAdd}>
+                Cerrar
+              </Button>
+              <Button colorScheme="blue" onClick={addRegalo}>
+                Agregar
+              </Button>
+            </Flex>
+          </form>
         </ModalBody>
-    
-       
-        </ModalContent>
+      </ModalContent>
     </Modal>
-  </React.Fragment>
-  )
-}
+  );
+};
 
-export default AddModal
+export default AddModal;

@@ -1,22 +1,19 @@
-
-export  const api = {
-    regaloPedir:()=> new Promise((resolve,reject)=> {
-        try {
-            const list = localStorage.getItem('LSlistaRegalos')
-            setTimeout(
-                () => resolve({
-                    status:'ok',
-                    data: list ? JSON.parse(list) : []
-                }),1500
-            )
-        } catch (error) {
+export const api = {
+    pedirRegalos:() => new Promise((resolve,reject)=>{
+        try{
+            const list = localStorage.getItem('LSlistaRegalos');
+            setTimeout(()=> resolve({
+                status:'ok',
+                data: list? JSON.parse(list):[]
+            }),2000)
+        } catch(erro){
             reject({
-                status: 'error',
+                status:'erro',
                 data: []
             })
         }
     }),
-    regaloGuardar:(data)=> new Promise((resolve, reject)=> {
+    guardarRegalos:(data)=> new Promise((resolve, reject)=> {
         try {
             localStorage.setItem("LSlistaRegalos", JSON.stringify(data))
             resolve('guardado')
@@ -24,4 +21,4 @@ export  const api = {
             reject('error al guardar')
         }
     })
-}
+} 
