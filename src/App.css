@@ -1,6 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Mountains+of+Christmas:wght@400;700&display=swap');
 body{
     height: 97.7vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-image: url(./fondo.webp) !important;
+    background-size: cover !important;
+
 }
