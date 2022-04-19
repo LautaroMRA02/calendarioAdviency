@@ -1,69 +1,41 @@
 import React from 'react'
 import {
+    FormLabel, Input,
     Modal,
     ModalOverlay,
     ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
     ModalCloseButton,
     Button,
-    Text,
-    ModalHeader,
-    ModalBody,
-    Input,
-    FormLabel,
-    Flex
   } from '@chakra-ui/react'
-
-function EditModal({regaloState,setRegaloState,setListaRegalos,isOpenEdit,onCloseEdit}) {
-    function handleRegalo(e){
-        setRegaloState(prevData=>{
-         return {...prevData,[e.target.name]: e.target.value}
-       }) 
-      }
-    function editRegalo(){
-        setListaRegalos(prevData => prevData.map(item=>{
-            if(item.id === regaloState.id){
-                return regaloState
-            } else {
-                return item 
-            }
-        }))
-        setRegaloState({
-            regalo:'',
-            destinario:'',
-            cantidad:'',
-            imagen:''
-          })
-    }
+  
+function EditModal({regaloObject,isOpenEdit,onCloseEdit }) {
   return (
     <Modal isOpen={isOpenEdit} onClose={onCloseEdit}>
-    <ModalOverlay />
-    <ModalContent>
-      <ModalHeader>
-      <Text>Editar Regalo</Text>
-      <ModalCloseButton />
-      </ModalHeader>
-
-      <ModalBody>
-        <form>
-          <FormLabel htmlFor='' as='legend'>Regalo</FormLabel> 
-            <Input defaultValue={regaloState?.regalo} onChange={handleRegalo} variant={'filled'} autoComplete='off' type={'text'} name="regalo" alt='regalo' id='regaloEdit'/>
-          <FormLabel htmlFor='destinario' as='legend'>Destinario</FormLabel> 
-            <Input defaultValue={regaloState?.destinario} onChange={handleRegalo}  variant={'filled'} autoComplete='off' type={'text'} name="destinario" alt='destinario' id='destinarioEdit'/>
-          <FormLabel htmlFor='cantidad' as='legend'>Cantidad</FormLabel> 
-            <Input defaultValue={regaloState?.cantidad} onChange={handleRegalo} variant={'filled'} autoComplete='off' type={'number'}name="cantidad" alt='cantidad' id='cantidadEdit'/>
-          <FormLabel htmlFor='imagen' as='legend'>Imagen(url)</FormLabel> 
-            <Input defaultValue={regaloState?.imagen} onChange={handleRegalo}  variant={'filled'} autoComplete='off' type={'text'} name="imagen" alt='imagen' id='imagenEdit'/>
-          <Flex mt={'16px'}>
-            <Button  mr={'auto'} onClick={onCloseEdit}>Cerrar</Button>
-            <Button colorScheme='whatsapp' onClick={editRegalo}>Guardar</Button>
-          </Flex>
-        </form>
-      </ModalBody>
-
-
-      
-    </ModalContent>
-  </Modal>
+        <ModalOverlay/>
+        <ModalContent>
+        <ModalHeader>Editar Regalo</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+            <FormLabel htmlFor='regalo'>Regalo</FormLabel>
+            <Input  defaultValue={regaloObject?.regalo} name='regalo' id='regalo' autoComplete='off'/>
+            <FormLabel htmlFor='regalo'>Precio</FormLabel>
+            <Input  defaultValue={regaloObject?.precio} name='precio' id='precio' autoComplete='off'/>
+            <FormLabel htmlFor='destinario'>Destinario</FormLabel>
+            <Input  defaultValue={regaloObject?.destinario} name='destinario' id='destinario' autoComplete='off'/>
+            <FormLabel htmlFor='cantidad'>Cantidad</FormLabel>
+            <Input  defaultValue={regaloObject?.cantidad} name='cantidad' id='cantidad' autoComplete='off'/>
+            <FormLabel htmlFor='imagen'>Imagen(url)</FormLabel>
+            <Input  defaultValue={regaloObject?.imagen} name='imagen' id='imagen' autoComplete='off'/>
+        </ModalBody>
+        <ModalFooter>
+            <Button marginRight={'auto'}  onClick={onCloseEdit}>Cerrar</Button>
+            <Button colorScheme='whatsapp'>Guardar</Button>
+        </ModalFooter>
+        </ModalContent>
+    </Modal>
   )
 }
 
