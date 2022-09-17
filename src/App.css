@@ -3,4 +3,6 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+    background: url('https://raw.githubusercontent.com/LautaroMRA02/calendarioAdviency/master/src/fondo.webp') !important;
+    background-size: cover !important;
 }
